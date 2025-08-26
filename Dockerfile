@@ -6,7 +6,7 @@ COPY src/ ./
 
 RUN go build -o mukuru-http mukuru-http.go
 
-FROM alpine:3.20.1
+FROM alpine:latest
 
 WORKDIR /app
 

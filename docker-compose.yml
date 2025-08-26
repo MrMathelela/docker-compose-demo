@@ -7,4 +7,4 @@ services:
     ports:
       - "8080:3000"
     environment:
-      - VERSION=local
+      - VERSION=${ENVIRONMENT_VERSION:-latest}

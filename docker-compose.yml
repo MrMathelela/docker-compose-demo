@@ -7,5 +7,3 @@ services:
       - "8080:3000"
     environment:
       - VERSION=local
-
-

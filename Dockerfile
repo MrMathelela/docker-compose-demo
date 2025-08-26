@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24.6-alpine AS builder
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY src/ ./
 
 RUN go build -o mukuru-http mukuru-http.go
 
-FROM alpine:latest
+FROM alpine:3.20.1
 
 WORKDIR /app
 

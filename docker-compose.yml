@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   mukuru-http:
+    image: ${DOCKER_IMAGE_NAME:-simonmathelela/docker-compose-demo}:${DOCKER_IMAGE_TAG:-latest}
     build: .
     ports:
       - "8080:3000"

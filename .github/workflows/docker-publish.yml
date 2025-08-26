@@ -37,16 +37,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y trivy
 
-#      - name: Scan Docker image for vulnerabilities
-#        id: trivy_scan
-#        run: |
-#          trivy image --severity HIGH,CRITICAL --exit-code 1 --format table ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}
-#
-#      - name: Check for vulnerabilities
-#        if: failure()
-#        run: |
-#          echo "High or critical severity vulnerabilities found. Failing the pipeline."
-#          exit 1
+      - name: Scan Docker image for vulnerabilities
+        id: trivy_scan
+        run: |
+          trivy image --severity HIGH,CRITICAL --exit-code 1 --format table ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}
+
+      - name: Check for vulnerabilities
+        if: failure()
+        run: |
+          echo "High or critical severity vulnerabilities found. Failing the pipeline."
+          exit 1
 
       - name: Push images to Docker Hub
         run: |

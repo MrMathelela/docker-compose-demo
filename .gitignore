@@ -1,2 +1,30 @@
+# Go build artifacts and binaries
+/bin/
+/build/
+/dist/
+*.exe
+*.out
+*.test
+
+# Go modules cache and vendor
+/pkg/mod/
+/vendor/
+
+# Logs
+*.log
+
+# Editor/IDE files
+*.swp
+*.swo
+*.bak
 .idea/
 
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Kubernetes generated or sensitive files
+k8s/*.env
+k8s/scripts/*.log
+k8s/certs/*
+k8s/secret.yaml

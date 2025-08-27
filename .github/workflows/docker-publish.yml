@@ -5,15 +5,33 @@ on:
     branches:
       - '**'
 
+env:
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
+  DOCKER_IMAGE_TAG: ${{ github.sha }}
+  ENVIRONMENT_VERSION: ${{ vars.ENVIRONMENT_VERSION }}
+
 jobs:
+  codeql-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: go
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
   build-and-push:
     runs-on: ubuntu-latest
-
-    env:
-      DOCKER_IMAGE_NAME: ${{ vars.DOCKER_IMAGE_NAME }}
-      DOCKER_IMAGE_TAG: ${{ github.sha }}
-      ENVIRONMENT_VERSION: ${{ vars.ENVIRONMENT_VERSION }}
-
+    needs: codeql-analysis
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,11 +43,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build images with Docker Compose
-        run: |
-          docker compose build
-
-      - name: List Docker images
-        run: docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Size}}"
+        run: docker compose build
 
       - name: Install Trivy CLI
         run: |
@@ -49,6 +63,10 @@ jobs:
           echo "High or critical severity vulnerabilities found. Failing the pipeline."
           exit 1
 
+      - name: Secret detection with Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: "detect --source . --no-git --redact"
+
       - name: Push images to Docker Hub
-        run: |
-          docker compose push
+        run: docker compose push

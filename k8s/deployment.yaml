@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mukuru-http
+  namespace: local
+  labels:
+    app.kubernetes.io/name: mukuru-http
+    app.kubernetes.io/part-of: mukuru
+    app: mukuru-http
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: mukuru-http
+  template:
+    metadata:
+      labels:
+        app: mukuru-http
+        app.kubernetes.io/name: mukuru-http
+        app.kubernetes.io/part-of: mukuru
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: mukuru-http
+          image: simonmathelela/docker-compose-demo:c03ee95fe6729200645e935491460eb3f2ae4696
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: VERSION
+              value: "k8s"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /live
+              port: 3000
+            periodSeconds: 10
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 12
+          securityContext:
+            readOnlyRootFilesystem: true

@@ -2,9 +2,22 @@ version: '3.8'
 
 services:
   mukuru-http:
-    image: ${DOCKER_IMAGE_NAME:-simonmathelela/docker-compose-demo}:${DOCKER_IMAGE_TAG:-latest}
+    image: ${DOCKER_IMAGE_NAME:-docker-compose-demo}:${DOCKER_IMAGE_TAG:-local}
     build: .
     ports:
-      - "8080:3000"
+      - "${HOST_PORT}:${APP_PORT}"
     environment:
-      - VERSION=${ENVIRONMENT_VERSION:-latest}
+      - VERSION=${ENVIRONMENT_VERSION:-local}
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "--spider", "-q", "http://localhost:${APP_PORT}/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

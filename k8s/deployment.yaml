@@ -28,7 +28,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: mukuru-http
-          image: simonmathelela/docker-compose-demo:c03ee95fe6729200645e935491460eb3f2ae4696
+          image: docker-compose-demo:local
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -1,16 +1,5 @@
 #!/bin/bash
 
-# Add ingress-nginx repo if not already present
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx 2>/dev/null || true
-
-# Check if ingress-nginx is already installed
-if helm status ingress-nginx >/dev/null 2>&1; then
-  echo "ingress-nginx is already installed. Skipping installation."
-else
-  echo "Installing ingress-nginx..."
-  helm install ingress-nginx ingress-nginx/ingress-nginx
-fi
-
 # Create certs directory if not exists
 mkdir -p "./certs"
 
@@ -36,7 +25,7 @@ fi
 
 # Apply the Kubernetes manifests
 kubectl apply -f "../k8s/namespace.yaml"
-kubectl apply -f "../k8s//deployment.yaml"
-kubectl apply -f "../k8s//service.yaml"
-kubectl apply -f "../k8s//secret.yaml"
-kubectl apply -f "../k8s//ingress.yaml"
+kubectl apply -f "../k8s/deployment.yaml"
+kubectl apply -f "../k8s/service.yaml"
+kubectl apply -f "../k8s/secret.yaml"
+kubectl apply -f "../k8s/ingress.yaml"

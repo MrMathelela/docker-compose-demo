@@ -84,6 +84,8 @@ Use the provided script to apply namespace, deployment, service, ingress, and se
 ```bash
 bash k8s/scripts/apply_services.sh
 ```
+Application will be available at:
+👉 [[http://localhost:3000](https://mukurur.go.local)](https://mukurur.go.local)
 
 #### Delete All Services
 

@@ -1,0 +1,12 @@
+# Ignore version control and build files
+.git
+.gitignore
+Dockerfile
+README.md
+certs/
+k8s/
+*.md
+*.log
+*.env
+*.DS_Store
+

@@ -1,27 +1,113 @@
-# Mukuru DevOps Assessment
+# 📦 Docker Compose Demo
 
-## Intent
-* Display familiarity with Docker, GIT & Pipelines
-* Ability to study new technologies and reach an outcome within a timeframe
-* Communicate the solution through configuration files & repository README
+A demo project showcasing **containerized application deployment** with **Docker Compose**, **Kubernetes manifests**, and **CI/CD pipelines**.
+The core application is a lightweight **Go HTTP service (`mukuru-http.go`)**, built to demonstrate local development, containerization, and production deployment strategies.
 
-## Overview
-_The goal of this exercise is to dockerise this application, to prepare it for a deployment into kubernetes, and to make the build and deployment consistent. Some of these steps are optional, so you can choose what you'd like to focus on, depending on the time you have available._
+---
 
-## Task
-### Dockerise the application
-* Create a free GitHub / GitLab / BitBucket account using any name (or use your existing personal account if you like) - https://gitlab.com,  https://github.com  or https://bitbucket.org/ & create a public repository called docker-compose-demo (GitLab is recommended as it provides pipelines and a container registry)
-* Add a Docker file to allow a Docker image to be created for the application
-* Add a docker-compose file to allow the application to run simply by using the docker-compose up command, and navigating to http://localhost:8080/. This should allow anyone to clone the repo and run the application with only docker installed (no need for Go)
+## 🚀 Features
 
-### Automate the above build process with a pipeline (optional)
-* Setup a build / publish pipeline to build the images on every commit
-* As a part of the pipeline, push the built docker image to a docker registry automatically (as mentioned above GitLab provides pipelines & a docker image registry, otherwise you can create a free Docker Hub (https://hub.docker.com/) account)
+* **Go HTTP Service** (`src/mukuru-http.go`)
+* **Dockerized Setup**
 
-### Configure a kubernetes deployment (optional)
-* Using something like Docker for Mac / Windows local kubernetes cluster, configure a method to deploy this application into kubernetes
-* This application should be available from localhost without needing to proxy into the cluster
-* Scale the instance to 4 replicas
+    * `Dockerfile` for building the service
+    * `.dockerignore` to optimize build context
+* **Environment Management** with `.env`
+* **Local Orchestration** using `docker-compose.yml`
+* **Kubernetes Deployment**
 
-### Enable HTTPS (optional) 
-* Allow the application to be served over HTTPS
+    * Complete manifests (`deployment`, `service`, `ingress`, `namespace`, `secret`)
+    * TLS certificates (`k8s/certs/`)
+    * Scripts for applying/removing resources
+* **CI/CD Workflows** (GitHub Actions)
+
+    * `docker-publish.yml` → Build & push Docker images
+    * `trivy.yml` → Security scanning with Trivy
+    * `codeql.yml` → Static analysis with CodeQL
+
+---
+
+## 📂 Project Structure
+
+```plaintext
+docker-compose-demo/
+├── .dockerignore              # Ignore files for Docker builds
+├── .env                       # Environment variables
+├── .gitignore                 # Git ignore rules
+├── Dockerfile                 # Application container build
+├── docker-compose.yml          # Local service orchestration
+├── src/mukuru-http.go         # Go web service
+├── k8s/                       # Kubernetes manifests
+│   ├── deployment.yaml
+│   ├── ingress.yaml
+│   ├── namespace.yaml
+│   ├── secret.yaml
+│   ├── service.yaml
+│   ├── certs/
+│   │   ├── tls.crt
+│   │   └── tls.key
+│   └── scripts/
+│       ├── apply_services.sh
+│       └── delete_services.sh
+└── .github/workflows/         # CI/CD pipelines
+    ├── codeql.yml
+    ├── docker-publish.yml
+    └── trivy.yml
+```
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-org/docker-compose-demo.git
+cd docker-compose-demo
+```
+
+### 2. Run Locally with Docker Compose
+
+```bash
+docker-compose up --build
+```
+
+Application will be available at:
+👉 [http://localhost:3000](http://localhost:3000)
+
+### 3. Deploy to Kubernetes
+
+#### Apply All Services
+
+Use the provided script to apply namespace, deployment, service, ingress, and secrets:
+
+```bash
+bash k8s/scripts/apply_services.sh
+```
+Application will be available at:
+👉 [[http://localhost:3000](https://mukurur.go.local)](https://mukurur.go.local)
+
+#### Delete All Services
+
+To clean up the cluster:
+
+```bash
+bash k8s/scripts/delete_services.sh
+```
+
+---
+
+## 🔒 Security
+
+* TLS enabled via `k8s/certs/tls.crt` and `k8s/certs/tls.key`
+* Secrets defined in `k8s/secret.yaml`
+* Vulnerability scanning with **Trivy** (`.github/workflows/trivy.yml`)
+* Static analysis with **CodeQL**
+
+---
+
+## ⚡ CI/CD Pipelines
+
+* **Docker Publish** → Builds and pushes Docker images
+* **CodeQL Analysis** → Detects vulnerabilities in code
+* **Trivy Security Scan** → Scans images for CVEs
